@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PageView {
+  id               String   @id @default(cuid())
+  page             String   @default("/")
+  referrer         String?
+  userAgent        String?
+  ip               String?
+  country          String?
+  city             String?
+  device           String?  // mobile | desktop | tablet
+  browser          String?
+  os               String?
+  screenResolution String?
+  language         String?
+  sessionId        String?
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([country])
+  @@index([page])
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    LeadStatus @default(NEW)
+  notes     String?
+  ip        String?
+  country   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([email])
+}
+
+model ResumeDownload {
+  id        String   @id @default(cuid())
+  ip        String?
+  country   String?
+  referrer  String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  lastLoginAt  DateTime?
+}
+
+enum LeadStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}

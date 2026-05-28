@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# Environment variables (never commit these)
+.env
+.env.local
+.env.*.local
+apps/web/.env.local
+apps/api/.env
+apps/api/.env.local
+
+# Build outputs
+apps/api/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Claude Code
+.claude/
+
+# Logs
+*.log
+npm-debug.log*

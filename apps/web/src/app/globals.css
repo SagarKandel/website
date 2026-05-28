@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --terminal-bg: #020c06;
+    --terminal-surface: #041209;
+    --terminal-border: #0d3320;
+    --terminal-green: #00ff7f;
+    --terminal-green-dim: #00cc64;
+    --terminal-green-glow: rgba(0, 255, 127, 0.2);
+    --terminal-amber: #ffb800;
+    --terminal-red: #ff3333;
+    --terminal-blue: #00d4ff;
+    --terminal-text: #b4ffda;
+    --terminal-muted: #4a7a5e;
+  }
+
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--terminal-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--terminal-green-dim);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--terminal-green);
+  }
+
+  /* Text selection */
+  ::selection {
+    background: rgba(0, 255, 127, 0.2);
+    color: #00ff7f;
+  }
+}
+
+@layer components {
+  .terminal-border {
+    border: 1px solid var(--terminal-border);
+  }
+
+  .terminal-glow {
+    box-shadow: 0 0 10px rgba(0, 255, 127, 0.15), 0 0 30px rgba(0, 255, 127, 0.05);
+  }
+
+  .terminal-glow-strong {
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.3), 0 0 60px rgba(0, 255, 127, 0.1);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 127, 0.5), 0 0 30px rgba(0, 255, 127, 0.3);
+  }
+
+  .text-glow-strong {
+    text-shadow: 0 0 20px rgba(0, 255, 127, 0.8), 0 0 50px rgba(0, 255, 127, 0.5);
+  }
+
+  .section-container {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-title {
+    @apply font-display text-2xl sm:text-3xl text-terminal-green text-glow mb-2;
+  }
+
+  .terminal-card {
+    @apply bg-terminal-surface terminal-border rounded-sm p-6 terminal-glow transition-all duration-300;
+  }
+
+  .terminal-card:hover {
+    @apply terminal-glow-strong;
+    border-color: rgba(0, 255, 127, 0.3);
+  }
+
+  .btn-primary {
+    @apply font-mono text-sm px-6 py-3 bg-transparent border border-terminal-green text-terminal-green
+           hover:bg-terminal-green hover:text-terminal-bg transition-all duration-200
+           cursor-pointer tracking-widest uppercase;
+  }
+
+  .btn-ghost {
+    @apply font-mono text-sm px-6 py-3 bg-transparent border border-terminal-border text-terminal-muted
+           hover:border-terminal-green hover:text-terminal-green transition-all duration-200
+           cursor-pointer tracking-widest uppercase;
+  }
+
+  .grid-bg {
+    background-image: linear-gradient(rgba(0, 255, 127, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 127, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 127, 0.3), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .crt-overlay {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.03) 0px,
+      rgba(0, 0, 0, 0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+  }
+}
+
+@layer utilities {
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+}
+
+/* Scanline animation */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 127, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(0, 255, 127, 0.5); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Terminal prompt animation */
+.terminal-prompt::after {
+  content: '_';
+  animation: blink 1s step-end infinite;
+  color: var(--terminal-green);
+}
