@@ -6,91 +6,46 @@ import { useInView } from 'react-intersection-observer'
 const skillCategories = [
   {
     category: 'Network Engineering',
-    color: '#00ff7f',
-    skills: [
-      { name: '100GbE Switching & Routing', level: 95 },
-      { name: 'BGP / OSPF / Advanced Routing', level: 92 },
-      { name: 'Dark Fibre / CWDM / DWDM', level: 88 },
-      { name: 'Fortigate Firewall (Design & HA)', level: 90 },
-      { name: 'ISP / Cross-Connect / DCC', level: 85 },
-      { name: 'L2 Provider & Leased Lines', level: 87 },
-    ],
+    skills: ['100GbE Switching & Routing', 'BGP / OSPF / Advanced Routing', 'Dark Fibre / CWDM / DWDM', 'Fortigate Firewall', 'ISP / Cross-Connect / DCC', 'L2 Provider & Leased Lines'],
   },
   {
     category: 'Systems & Virtualisation',
-    color: '#00d4ff',
-    skills: [
-      { name: 'Proxmox VE (Clustering & HA)', level: 90 },
-      { name: 'Linux Administration', level: 92 },
-      { name: 'TrueNAS / ZFS / OMV', level: 88 },
-      { name: 'Hyper-V / Windows Server', level: 82 },
-      { name: 'Windows Storage Spaces', level: 78 },
-      { name: 'Docker / Portainer', level: 90 },
-    ],
+    skills: ['Proxmox VE (Clustering & HA)', 'Linux Administration', 'TrueNAS / ZFS / OMV', 'Hyper-V / Windows Server', 'Docker / Portainer', 'Windows Storage Spaces'],
   },
   {
     category: 'Cloud, AI & Automation',
-    color: '#ffb800',
-    skills: [
-      { name: 'AWS (SAA-C03 Certified)', level: 82 },
-      { name: 'Ollama / vLLM Self-Hosted AI', level: 85 },
-      { name: 'RMM & Software Deployment', level: 88 },
-      { name: 'Python / Bash Scripting', level: 78 },
-      { name: 'AYON / NIM Studio Pipeline', level: 85 },
-      { name: 'GAM / GYB / Google Workspace', level: 80 },
-    ],
+    skills: ['AWS (SAA-C03 Certified)', 'Ollama / vLLM Self-Hosted AI', 'RMM & Software Deployment', 'Python / Bash Scripting', 'AYON / NIM Studio Pipeline', 'GAM / GYB / Google Workspace'],
   },
 ]
 
 const toolGroups = [
-  {
-    label: 'Networking',
-    tools: ['Fortigate', 'Cisco', 'Juniper', 'BGP', 'OSPF', 'CWDM', 'DWDM', 'Dark Fibre', 'VLANs', 'LACP', 'SFP+', 'QSFP28', 'Wireshark', 'tcpdump'],
-  },
-  {
-    label: 'Virtualisation',
-    tools: ['Proxmox VE', 'Hyper-V', 'VMware ESXi', 'KVM', 'LXC', 'Windows Server 2022', 'Active Directory', 'WSUS'],
-  },
-  {
-    label: 'Storage',
-    tools: ['TrueNAS SCALE', 'TrueNAS CORE', 'OpenMediaVault', 'ZFS', 'iSCSI', 'NFS', 'SMB', 'Ceph', 'RAID', 'Replication'],
-  },
-  {
-    label: 'Containers & DevOps',
-    tools: ['Docker', 'Portainer', 'Docker Compose', 'Nginx', 'Traefik', 'Git', 'GitHub Actions', 'CI/CD'],
-  },
-  {
-    label: 'AI & Open Source',
-    tools: ['Ollama', 'vLLM', 'LLaMA', 'Mistral', 'Open WebUI', 'Stable Diffusion', 'RustDesk', 'Netdata', 'Grafana', 'InfluxDB'],
-  },
-  {
-    label: 'VFX & Studio',
-    tools: ['AYON', 'NIM Studio', 'RMM', 'SolarWinds', 'PRTG', 'Nagios', 'Slack', 'Teams', 'Google Workspace', 'GAM', 'GYB'],
-  },
+  { label: 'Networking', tools: ['Fortigate', 'Cisco', 'Juniper', 'BGP', 'OSPF', 'CWDM', 'DWDM', 'Dark Fibre', 'VLANs', 'LACP', 'Wireshark', 'tcpdump'] },
+  { label: 'Virtualisation', tools: ['Proxmox VE', 'Hyper-V', 'VMware ESXi', 'KVM', 'LXC', 'Windows Server', 'Active Directory'] },
+  { label: 'Storage', tools: ['TrueNAS SCALE', 'TrueNAS CORE', 'ZFS', 'iSCSI', 'NFS', 'SMB', 'Ceph', 'RAIDZ2'] },
+  { label: 'Containers & DevOps', tools: ['Docker', 'Portainer', 'Docker Compose', 'Nginx', 'Traefik', 'Git', 'GitHub Actions'] },
+  { label: 'AI & Open Source', tools: ['Ollama', 'vLLM', 'LLaMA', 'Mistral', 'Open WebUI', 'Netdata', 'Grafana', 'InfluxDB'] },
+  { label: 'VFX & Studio', tools: ['AYON', 'NIM Studio', 'RMM', 'SolarWinds', 'PRTG', 'Google Workspace', 'GAM', 'GYB'] },
 ]
 
 const certifications = [
-  { name: 'AWS Certified Solutions Architect', level: 'Associate (SAA-C03)', issuer: 'Amazon Web Services', badge: '☁', color: 'text-terminal-amber' },
-  { name: 'Bachelor of Information Technology', level: 'Network & System Computing', issuer: 'Victoria University · Melbourne', badge: '🎓', color: 'text-terminal-blue' },
+  { name: 'AWS Certified Solutions Architect', level: 'Associate (SAA-C03)', issuer: 'Amazon Web Services', icon: '☁️' },
+  { name: 'Bachelor of Information Technology', level: 'Network & System Computing', issuer: 'Victoria University · Melbourne', icon: '🎓' },
 ]
 
 export default function SkillsSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 })
 
   return (
-    <section id="skills" className="py-24 relative">
+    <section id="skills" className="py-24 bg-white">
       <div className="section-container" ref={ref}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-16"
+          className="mb-14"
         >
-          <p className="text-terminal-muted text-sm tracking-widest mb-2">
-            <span className="text-terminal-green">03.</span> skills
-          </p>
-          <h2 className="section-title">TECH STACK</h2>
-          <div className="w-16 h-px bg-terminal-green mt-3" />
+          <p className="section-label">Technical skills</p>
+          <h2 className="section-title">What I work with</h2>
         </motion.div>
 
         {/* Certifications */}
@@ -101,49 +56,34 @@ export default function SkillsSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.1 + i * 0.1 }}
-              className="terminal-card flex items-center gap-4"
+              className="card flex items-center gap-4"
             >
-              <div className="text-4xl">{cert.badge}</div>
+              <div className="text-4xl">{cert.icon}</div>
               <div>
-                <p className={`${cert.color} font-mono text-sm font-bold`}>{cert.name}</p>
-                <p className="text-terminal-text text-sm">{cert.level}</p>
-                <p className="text-terminal-muted text-xs">{cert.issuer}</p>
+                <p className="font-semibold text-ink text-sm">{cert.name}</p>
+                <p className="text-ink-2 text-sm">{cert.level}</p>
+                <p className="text-muted text-xs mt-0.5">{cert.issuer}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Skill bars */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        {/* Skill categories */}
+        <div className="grid md:grid-cols-3 gap-5 mb-10">
           {skillCategories.map((cat, catIdx) => (
             <motion.div
               key={cat.category}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 + catIdx * 0.12 }}
-              className="terminal-card"
+              transition={{ delay: 0.2 + catIdx * 0.1 }}
+              className="card"
             >
-              <h3 className="font-mono text-sm tracking-wider mb-5 pb-3 border-b border-terminal-border"
-                style={{ color: cat.color }}>
-                <span className="text-terminal-muted">// </span>{cat.category}
+              <h3 className="font-semibold text-ink text-sm mb-4 pb-3 border-b border-border">
+                {cat.category}
               </h3>
-              <div className="space-y-4">
-                {cat.skills.map((skill, skillIdx) => (
-                  <div key={skill.name}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs text-terminal-text/80 font-mono">{skill.name}</span>
-                      <span className="text-xs font-mono" style={{ color: cat.color }}>{skill.level}%</span>
-                    </div>
-                    <div className="h-1 bg-terminal-dim rounded-none overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={inView ? { width: `${skill.level}%` } : { width: 0 }}
-                        transition={{ duration: 1.2, delay: 0.5 + catIdx * 0.15 + skillIdx * 0.06, ease: 'easeOut' }}
-                        className="h-full"
-                        style={{ background: cat.color, boxShadow: `0 0 8px ${cat.color}66` }}
-                      />
-                    </div>
-                  </div>
+              <div className="flex flex-wrap gap-2">
+                {cat.skills.map((skill) => (
+                  <span key={skill} className="tag">{skill}</span>
                 ))}
               </div>
             </motion.div>
@@ -151,27 +91,21 @@ export default function SkillsSection() {
         </div>
 
         {/* Tool groups */}
-        <div className="space-y-4">
+        <div className="space-y-0">
           {toolGroups.map((group, i) => (
             <motion.div
               key={group.label}
               initial={{ opacity: 0, x: -20 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.7 + i * 0.07 }}
-              className="terminal-card"
+              transition={{ delay: 0.4 + i * 0.06 }}
+              className="flex flex-wrap items-center gap-3 py-3.5 border-b border-border last:border-0"
             >
-              <p className="text-xs text-terminal-muted tracking-widest mb-3 font-mono">
-                <span className="text-terminal-green">// </span>{group.label.toUpperCase()}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {group.tools.map((tool) => (
-                  <span key={tool}
-                    className="text-xs font-mono px-3 py-1.5 border border-terminal-border text-terminal-muted
-                               hover:border-terminal-green hover:text-terminal-green transition-all duration-200 cursor-default">
-                    {tool}
-                  </span>
-                ))}
-              </div>
+              <span className="text-xs font-semibold text-ink-2 min-w-[130px]">{group.label}</span>
+              {group.tools.map((tool) => (
+                <span key={tool} className="text-xs text-ink-2 bg-surface-alt px-2.5 py-1 rounded-md">
+                  {tool}
+                </span>
+              ))}
             </motion.div>
           ))}
         </div>

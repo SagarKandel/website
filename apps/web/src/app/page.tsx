@@ -8,28 +8,14 @@ import BlogSection from '@/components/sections/BlogSection'
 import TestimonialsSection from '@/components/sections/TestimonialsSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/ui/Footer'
-import MatrixRain from '@/components/ui/MatrixRain'
 import AnalyticsTracker from '@/components/ui/AnalyticsTracker'
 
 export default function Home() {
   return (
     <>
-      {/* Atmospheric overlays */}
-      <div className="scan-line" />
-      <div className="crt-overlay" />
-      <div className="noise-overlay" />
-
-      {/* Matrix background */}
-      <MatrixRain />
-
-      {/* Analytics tracker */}
       <AnalyticsTracker />
-
-      {/* Navigation */}
       <Navbar />
-
-      {/* Main content */}
-      <main className="relative z-10">
+      <main>
         <HeroSection />
         <AboutSection />
         <ExperienceSection />
@@ -39,7 +25,6 @@ export default function Home() {
         <BlogSection />
         <ContactSection />
       </main>
-
       <Footer />
     </>
   )

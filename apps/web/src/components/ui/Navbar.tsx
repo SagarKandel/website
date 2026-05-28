@@ -2,133 +2,102 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Terminal } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { label: 'about', href: '#about' },
-  { label: 'experience', href: '#experience' },
-  { label: 'skills', href: '#skills' },
-  { label: 'projects', href: '#projects' },
-  { label: 'testimonials', href: '#testimonials' },
-  { label: 'blog', href: '#blog' },
-  { label: 'contact', href: '#contact' },
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { threshold: 0.3 }
-    )
-    navLinks.forEach(({ href }) => {
-      const el = document.querySelector(href)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
   }, [])
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-terminal-bg/95 backdrop-blur-md border-b border-terminal-border'
+            ? 'bg-white/90 backdrop-blur-md border-b border-border shadow-sm'
             : 'bg-transparent'
         }`}
       >
         <div className="section-container">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <a href="#" className="flex items-center gap-2 group">
-              <Terminal className="w-5 h-5 text-terminal-green group-hover:animate-spin transition-all" />
-              <span className="font-display text-sm text-terminal-green text-glow tracking-widest">
-                SK<span className="text-terminal-muted">.exe</span>
-              </span>
+            <a href="#" className="font-bold text-ink text-lg tracking-tight hover:text-accent transition-colors">
+              Sagar Kandel
             </a>
 
-            {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
-              {navLinks.map(({ label, href }, i) => (
-                <motion.a
+              {navLinks.map(({ label, href }) => (
+                <a
                   key={label}
                   href={href}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * i }}
-                  className={`px-3 py-1.5 text-xs tracking-widest uppercase transition-all duration-200 border border-transparent
-                    ${activeSection === href.slice(1)
-                      ? 'text-terminal-green border-terminal-border bg-terminal-surface'
-                      : 'text-terminal-muted hover:text-terminal-green'
-                    }`}
+                  className="px-4 py-2 text-sm text-ink-2 hover:text-ink font-medium transition-colors rounded-lg hover:bg-surface-alt"
                 >
-                  <span className="text-terminal-muted mr-1">/</span>{label}
-                </motion.a>
+                  {label}
+                </a>
               ))}
-              <motion.a
+              <a
                 href="/resume.pdf"
                 download
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="ml-4 btn-primary text-xs"
-                onClick={() => {
+                onClick={() =>
                   fetch(`${process.env.NEXT_PUBLIC_API_URL}/track/resume-download`, { method: 'POST' }).catch(() => {})
-                }}
+                }
+                className="ml-3 btn-primary py-2 text-sm"
               >
-                resume
-              </motion.a>
+                Resume
+              </a>
             </div>
 
-            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden text-terminal-green p-2"
+              className="md:hidden p-2 text-ink-2 hover:text-ink rounded-lg hover:bg-surface-alt transition-colors"
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-terminal-bg/98 flex flex-col items-center justify-center gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-4"
           >
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-5 right-5 p-2 text-ink-2 hover:text-ink"
+            >
+              <X size={24} />
+            </button>
             {navLinks.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
                 onClick={() => setMobileOpen(false)}
-                className="font-display text-xl text-terminal-green text-glow tracking-widest uppercase"
+                className="text-2xl font-semibold text-ink hover:text-accent transition-colors"
               >
                 {label}
               </a>
             ))}
-            <a href="/resume.pdf" download className="btn-primary mt-4">
-              resume
+            <a href="/resume.pdf" download className="mt-4 btn-primary">
+              Resume
             </a>
           </motion.div>
         )}

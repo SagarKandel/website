@@ -1,160 +1,126 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { TypeAnimation } from 'react-type-animation'
-import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react'
-
-const terminalLines = [
-  '> Initializing system...',
-  '> Loading profile: sagar.kandel',
-  '> Experience: 5+ years VFX IT Infrastructure',
-  '> Certifications: AWS Solutions Architect ✓',
-  '> Network: 100Gig | Dark Fibre | ISP-Level BGP',
-  '> Stack: Fortigate | Proxmox | Docker | TrueNAS',
-  '> Current: Blockhead VFX — Systems Engineer',
-  '> Status: Available for senior opportunities',
-  '> System ready.',
-]
+import { Github, Linkedin, Mail, MapPin, ArrowRight } from 'lucide-react'
 
 export default function HeroSection() {
-  const [visibleLines, setVisibleLines] = useState<number>(0)
-  const [bootComplete, setBootComplete] = useState(false)
-
-  useEffect(() => {
-    let current = 0
-    const interval = setInterval(() => {
-      current++
-      setVisibleLines(current)
-      if (current >= terminalLines.length) {
-        clearInterval(interval)
-        setTimeout(() => setBootComplete(true), 500)
-      }
-    }, 320)
-    return () => clearInterval(interval)
-  }, [])
-
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
-      <div className="absolute inset-0 grid-bg opacity-50" />
-      <div className="absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 0%, rgba(2, 12, 6, 0.8) 100%)' }}
-      />
+    <section className="min-h-screen flex items-center bg-bg pt-16">
+      <div className="section-container w-full">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center py-16 lg:py-24">
 
-      <div className="section-container relative z-10 pt-20">
-        <div className="max-w-4xl">
+          {/* Text */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="terminal-card mb-8 font-mono text-sm"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
           >
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-terminal-border">
-              <div className="w-3 h-3 rounded-full bg-red-500 opacity-70" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500 opacity-70" />
-              <div className="w-3 h-3 rounded-full bg-green-500 opacity-70" />
-              <span className="ml-2 text-terminal-muted text-xs tracking-widest">bash — sagar@portfolio ~</span>
+            <div className="flex items-center gap-2 mb-6">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-sm text-ink-2 font-medium">Available for opportunities</span>
             </div>
-            <div className="space-y-1">
-              {terminalLines.slice(0, visibleLines).map((line, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className={`${
-                    line.includes('✓') || line.includes('ready') ? 'text-terminal-green text-glow' :
-                    line.includes('Available') ? 'text-terminal-amber' :
-                    line.includes('100Gig') || line.includes('ISP') ? 'text-terminal-blue' :
-                    'text-terminal-muted'
-                  }`}
-                >
-                  {line}
-                </motion.div>
-              ))}
-              {visibleLines < terminalLines.length && (
-                <span className="text-terminal-green animate-blink">█</span>
-              )}
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-ink leading-[1.05] tracking-tight mb-5">
+              Hi, I&apos;m<br />
+              <span className="text-accent">Sagar</span> Kandel
+            </h1>
+
+            <p className="text-xl text-ink-2 font-medium mb-4">
+              Network &amp; Systems Engineer
+            </p>
+
+            <p className="text-ink-2 leading-relaxed max-w-lg mb-8">
+              5+ years building enterprise-grade infrastructure for VFX production at{' '}
+              <span className="font-medium text-ink">Blockhead VFX</span> in Sydney. I work at the
+              intersection of high-speed networking, hypervisor clusters, and self-hosted AI — the
+              infrastructure that keeps creative studios running without a frame dropped.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mb-10">
+              <a href="#contact" className="btn-primary">
+                Get in touch <ArrowRight size={16} />
+              </a>
+              <a href="#experience" className="btn-ghost">
+                View my work
+              </a>
+            </div>
+
+            <div className="flex items-center gap-5">
+              <a
+                href="https://github.com/SagarKandel"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted hover:text-ink transition-colors"
+                aria-label="GitHub"
+              >
+                <Github size={20} />
+              </a>
+              <a
+                href="https://linkedin.com/in/sagar-kandel4742"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted hover:text-ink transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+              <a
+                href="mailto:sagar@sagarkandel.com"
+                className="text-muted hover:text-ink transition-colors"
+                aria-label="Email"
+              >
+                <Mail size={20} />
+              </a>
+              <span className="flex items-center gap-1.5 text-sm text-muted">
+                <MapPin size={14} />
+                Sydney, Australia
+              </span>
             </div>
           </motion.div>
 
-          {bootComplete && (
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <p className="text-terminal-muted text-sm tracking-widest mb-3 uppercase">
-                <span className="text-terminal-green">$</span> whoami
-              </p>
-              <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl text-terminal-green text-glow-strong mb-4 leading-none">
-                SAGAR<br />
-                <span className="text-terminal-text opacity-80">KANDEL</span>
-              </h1>
-
-              <div className="text-lg sm:text-xl text-terminal-muted font-mono mb-8 h-8">
-                <TypeAnimation
-                  sequence={[
-                    'Senior Systems & Network Engineer',
-                    2000,
-                    'VFX Infrastructure Specialist',
-                    2000,
-                    'Dark Fibre & ISP-Level Networking',
-                    2000,
-                    'Datacenter & Cloud Architect',
-                    2000,
-                    'Open Source & Automation Engineer',
-                    2000,
-                  ]}
-                  wrapper="span"
-                  speed={50}
-                  repeat={Infinity}
-                  className="text-terminal-green"
-                />
+          {/* Photo placeholder */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex justify-center lg:justify-end"
+          >
+            <div className="relative">
+              <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-3xl bg-accent-light border-2 border-accent/20 flex items-center justify-center overflow-hidden">
+                {/* Replace this with <Image src="/photo.jpg" ... /> when ready */}
+                <div className="text-center">
+                  <div className="w-24 h-24 rounded-full bg-accent/10 border-2 border-accent/20 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-3xl font-bold text-accent">SK</span>
+                  </div>
+                  <p className="text-sm text-accent/50 font-medium">Add your photo here</p>
+                </div>
               </div>
+              <div className="absolute -inset-3 rounded-3xl border border-accent/10 -z-10" />
 
-              <p className="text-terminal-text/70 font-body max-w-xl mb-10 leading-relaxed">
-                5+ years engineering enterprise-grade infrastructure for VFX production at scale.
-                100Gig networks, dark fibre, ISP-level BGP, Fortigate firewalls, Proxmox clusters,
-                and self-hosted AI — based in Australia.
-              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg border border-border px-4 py-3"
+              >
+                <p className="text-xs text-muted font-medium">AWS Certified</p>
+                <p className="text-sm font-semibold text-ink">Solutions Architect</p>
+              </motion.div>
 
-              <div className="flex flex-wrap gap-4 mb-12">
-                <a href="#contact" className="btn-primary">
-                  <span className="text-terminal-green mr-2">→</span>
-                  Get in Touch
-                </a>
-                <a href="#experience" className="btn-ghost">View Experience</a>
-                <a href="/resume.pdf" download className="btn-ghost"
-                  onClick={() => fetch(`${process.env.NEXT_PUBLIC_API_URL}/track/resume-download`, { method: 'POST' }).catch(() => {})}>
-                  Download Resume
-                </a>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg border border-border px-4 py-3"
+              >
+                <p className="text-xs text-muted font-medium">Based in</p>
+                <p className="text-sm font-semibold text-ink">Sydney 🇦🇺</p>
+              </motion.div>
+            </div>
+          </motion.div>
 
-              <div className="flex items-center gap-6">
-                <span className="text-terminal-muted text-xs tracking-widest">CONNECT://</span>
-                <a href="https://github.com/SagarKandel" target="_blank" rel="noopener noreferrer"
-                  className="text-terminal-muted hover:text-terminal-green transition-colors" aria-label="GitHub">
-                  <Github size={20} />
-                </a>
-                <a href="https://linkedin.com/in/sagar-kandel4742" target="_blank" rel="noopener noreferrer"
-                  className="text-terminal-muted hover:text-terminal-green transition-colors" aria-label="LinkedIn">
-                  <Linkedin size={20} />
-                </a>
-                <a href="mailto:sagar@sagarkandel.com"
-                  className="text-terminal-muted hover:text-terminal-green transition-colors" aria-label="Email">
-                  <Mail size={20} />
-                </a>
-              </div>
-            </motion.div>
-          )}
         </div>
       </div>
-
-      {bootComplete && (
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        >
-          <span className="text-terminal-muted text-xs tracking-widest">SCROLL</span>
-          <ChevronDown className="text-terminal-green animate-bounce" size={20} />
-        </motion.div>
-      )}
     </section>
   )
 }

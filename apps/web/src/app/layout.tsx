@@ -1,19 +1,7 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Orbitron, Inter } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
-  display: 'swap',
-})
-
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  variable: '--font-orbitron',
-  display: 'swap',
-})
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,18 +43,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body
-        className={`${jetbrainsMono.variable} ${orbitron.variable} ${inter.variable} bg-terminal-bg text-terminal-text font-mono antialiased`}
-      >
+      <body className={`${inter.variable} font-sans antialiased`}>
         {children}
         <Toaster
-          theme="dark"
+          theme="light"
           toastOptions={{
             style: {
-              background: '#041209',
-              border: '1px solid #0d3320',
-              color: '#00ff7f',
-              fontFamily: 'var(--font-jetbrains)',
+              background: '#ffffff',
+              border: '1px solid #E5E5DF',
+              color: '#18181B',
             },
           }}
         />
