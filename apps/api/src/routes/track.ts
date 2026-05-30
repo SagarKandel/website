@@ -67,6 +67,32 @@ router.post('/pageview', async (req: Request, res: Response) => {
   }
 })
 
+// POST /track/heartbeat — keep session alive for realtime tracking
+router.post('/heartbeat', async (req: Request, res: Response) => {
+  try {
+    const ip = getIP(req)
+    const geo = geoip.lookup(ip)
+    const ua = req.headers['user-agent'] || ''
+    const sessionId = req.body.sessionId
+    if (!sessionId) return res.status(400).json({ error: 'sessionId required' })
+
+    await prisma.activeSession.upsert({
+      where: { sessionId },
+      update: { lastSeen: new Date(), page: req.body.page || '/' },
+      create: {
+        sessionId,
+        page: req.body.page || '/',
+        country: geo?.country || null,
+        device: parseDevice(ua),
+      },
+    })
+
+    res.json({ ok: true })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to track heartbeat' })
+  }
+})
+
 // POST /track/resume-download
 router.post('/resume-download', async (req: Request, res: Response) => {
   try {

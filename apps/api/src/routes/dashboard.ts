@@ -164,4 +164,60 @@ router.get('/referrers', async (_req: Request, res: Response) => {
   }
 })
 
+// GET /dashboard/browsers — browser breakdown
+router.get('/browsers', async (_req: Request, res: Response) => {
+  try {
+    const data = await prisma.pageView.groupBy({
+      by: ['browser'],
+      _count: { browser: true },
+      orderBy: { _count: { browser: 'desc' } },
+    })
+    res.json(data.map((d) => ({ browser: d.browser || 'Unknown', count: d._count.browser })))
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch browsers' })
+  }
+})
+
+// GET /dashboard/pages — top pages by views
+router.get('/pages', async (_req: Request, res: Response) => {
+  try {
+    const monthAgo = new Date()
+    monthAgo.setDate(monthAgo.getDate() - 30)
+    const data = await prisma.pageView.groupBy({
+      by: ['page'],
+      _count: { page: true },
+      orderBy: { _count: { page: 'desc' } },
+      take: 15,
+    })
+    const monthData = await prisma.pageView.groupBy({
+      by: ['page'],
+      where: { createdAt: { gte: monthAgo } },
+      _count: { page: true },
+    })
+    const monthMap: Record<string, number> = {}
+    monthData.forEach((d) => { monthMap[d.page] = d._count.page })
+    res.json(data.map((d) => ({
+      page: d.page,
+      total: d._count.page,
+      month: monthMap[d.page] || 0,
+    })))
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch pages' })
+  }
+})
+
+// GET /dashboard/realtime — active sessions in last 5 min
+router.get('/realtime', async (_req: Request, res: Response) => {
+  try {
+    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000)
+    const active = await prisma.activeSession.findMany({
+      where: { lastSeen: { gte: fiveMinAgo } },
+      orderBy: { lastSeen: 'desc' },
+    })
+    res.json({ count: active.length, sessions: active })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch realtime' })
+  }
+})
+
 export { router as dashboardRouter }
