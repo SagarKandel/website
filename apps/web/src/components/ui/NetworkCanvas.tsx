@@ -49,6 +49,7 @@ export default function NetworkCanvas({
     let raf: number
 
     function frame() {
+      if (!canvas) return
       const W = canvas.width, H = canvas.height
       ctx.clearRect(0, 0, W, H)
 
