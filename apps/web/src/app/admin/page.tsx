@@ -268,7 +268,7 @@ function Field({ label, value, onChange, textarea, rows }: {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
-type TabName = 'overview' | 'traffic' | 'leads' | 'projects' | 'experience' | 'skills' | 'blog'
+type TabName = 'overview' | 'traffic' | 'leads' | 'projects' | 'experience' | 'skills' | 'blog' | 'settings'
 
 export default function AdminDashboard() {
   const [token, setToken] = useState<string | null>(null)
@@ -297,6 +297,11 @@ export default function AdminDashboard() {
   const [experience, setExperience] = useState<Experience[]>([])
   const [skills, setSkills] = useState<Skill[]>([])
   const [posts, setPosts] = useState<BlogPost[]>([])
+
+  // Settings
+  const [settings, setSettings] = useState<Record<string, string>>({})
+  const [settingsSaving, setSettingsSaving] = useState(false)
+  const [settingsSaved, setSettingsSaved] = useState(false)
 
   // CMS editing state
   const [editingProject, setEditingProject] = useState<string | null>(null)  // id or 'new'
@@ -343,6 +348,8 @@ export default function AdminDashboard() {
     setExperience(Array.isArray(exp) ? exp : [])
     setSkills(Array.isArray(sk) ? sk : [])
     setPosts(Array.isArray(bl) ? bl : [])
+    // Load settings
+    fetch(`${API}/settings`).then(r => r.json()).then(d => { if (d && typeof d === 'object') setSettings(d) }).catch(() => {})
   }, [apiFetch])
 
   useEffect(() => {
@@ -486,6 +493,7 @@ export default function AdminDashboard() {
           <Tab label="experience" active={activeTab === 'experience'} onClick={() => setActiveTab('experience')} />
           <Tab label="skills" active={activeTab === 'skills'} onClick={() => setActiveTab('skills')} />
           <Tab label="blog" active={activeTab === 'blog'} onClick={() => setActiveTab('blog')} />
+          <Tab label="settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
         </div>
 
         {/* ── Overview ── */}
@@ -833,6 +841,110 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+
+        {/* ── Settings ── */}
+        {activeTab === 'settings' && (
+          <div className="space-y-8">
+            {(() => {
+              const field = (key: string, label: string, multiline = false) => (
+                <div key={key}>
+                  <label className="block text-xs font-mono text-[#4a7a5e] mb-1 uppercase tracking-widest">{label}</label>
+                  {multiline ? (
+                    <textarea
+                      rows={3}
+                      value={settings[key] || ''}
+                      onChange={e => setSettings(s => ({ ...s, [key]: e.target.value }))}
+                      className="w-full bg-[#041209] border border-[#0d3320] text-[#b4ffda] text-sm font-mono p-3 focus:outline-none focus:border-[#00ff7f] resize-none"
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={settings[key] || ''}
+                      onChange={e => setSettings(s => ({ ...s, [key]: e.target.value }))}
+                      className="w-full bg-[#041209] border border-[#0d3320] text-[#b4ffda] text-sm font-mono p-3 focus:outline-none focus:border-[#00ff7f]"
+                    />
+                  )}
+                </div>
+              )
+
+              const saveSettings = async () => {
+                setSettingsSaving(true)
+                const entries = Object.entries(settings).map(([key, value]) => ({ key, value }))
+                await apiFetch('/settings', { method: 'PUT', body: JSON.stringify(entries) })
+                setSettingsSaving(false)
+                setSettingsSaved(true)
+                setTimeout(() => setSettingsSaved(false), 2000)
+              }
+
+              return (
+                <>
+                  <div className="bg-[#041209] border border-[#0d3320] p-6">
+                    <p className="text-[#00ff7f] text-xs font-mono tracking-widest mb-6">// HERO SECTION</p>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {field('hero_name', 'Name')}
+                      {field('hero_role', 'Role / Title')}
+                      {field('hero_location', 'Location')}
+                      {field('hero_employer', 'Employer')}
+                      {field('hero_timezone', 'Timezone')}
+                      {field('hero_available_text', 'Available badge text')}
+                    </div>
+                    <div className="mt-4 flex items-center gap-4">
+                      <label className="text-xs font-mono text-[#4a7a5e] uppercase tracking-widest">Available badge</label>
+                      <button
+                        onClick={() => setSettings(s => ({ ...s, hero_available: s.hero_available === 'true' ? 'false' : 'true' }))}
+                        className={`text-xs border px-4 py-1.5 font-mono transition-all ${settings.hero_available === 'false' ? 'border-[#4a7a5e] text-[#4a7a5e]' : 'border-[#00ff7f] text-[#00ff7f]'}`}
+                      >
+                        {settings.hero_available === 'false' ? 'HIDDEN' : 'VISIBLE'}
+                      </button>
+                    </div>
+                    <div className="mt-4">{field('hero_bio', 'Bio paragraph', true)}</div>
+                    <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                      {field('hero_stat1_value', 'Stat 1 value')}
+                      {field('hero_stat1_label', 'Stat 1 label')}
+                      {field('hero_stat2_value', 'Stat 2 value')}
+                      {field('hero_stat2_label', 'Stat 2 label')}
+                      {field('hero_stat3_value', 'Stat 3 value')}
+                      {field('hero_stat3_label', 'Stat 3 label')}
+                      {field('hero_stat4_value', 'Stat 4 value')}
+                      {field('hero_stat4_label', 'Stat 4 label')}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#041209] border border-[#0d3320] p-6">
+                    <p className="text-[#00ff7f] text-xs font-mono tracking-widest mb-6">// ABOUT SECTION</p>
+                    <div className="mt-4">{field('about_heading', 'Heading')}</div>
+                    <div className="mt-4">{field('about_subheading', 'Subheading paragraph', true)}</div>
+                    <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                      {field('about_currently', 'Currently at')}
+                      {field('about_education', 'Education')}
+                      {field('about_cert', 'Certification')}
+                      {field('about_experience', 'Experience summary')}
+                      {field('about_timezone', 'Timezone')}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#041209] border border-[#0d3320] p-6">
+                    <p className="text-[#00ff7f] text-xs font-mono tracking-widest mb-6">// SOCIAL LINKS</p>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {field('social_github', 'GitHub URL')}
+                      {field('social_linkedin', 'LinkedIn URL')}
+                      {field('social_email', 'Email address')}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={saveSettings}
+                    disabled={settingsSaving}
+                    className="w-full border border-[#00ff7f] text-[#00ff7f] py-3 font-mono text-sm hover:bg-[#00ff7f] hover:text-[#020c06] transition-all disabled:opacity-50"
+                  >
+                    {settingsSaving ? 'saving...' : settingsSaved ? '✓ saved!' : 'save all settings'}
+                  </button>
+                </>
+              )
+            })()}
+          </div>
+        )}
+
       </div>
     </div>
   )

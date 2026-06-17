@@ -11,6 +11,7 @@ import { leadsRouter } from './routes/leads'
 import { authRouter } from './routes/auth'
 import { dashboardRouter } from './routes/dashboard'
 import { cmsRouter, contentRouter } from './routes/cms'
+import { settingsRouter } from './routes/settings'
 import { authMiddleware } from './middleware/auth'
 
 const app = express()
@@ -59,6 +60,7 @@ app.use('/auth', authRouter)
 app.use('/dashboard', authMiddleware, dashboardRouter)
 app.use('/content', contentRouter)          // public read-only
 app.use('/cms', authMiddleware, cmsRouter)  // admin write + read
+app.use('/settings', settingsRouter)        // GET public; PUT requires auth token checked inside
 
 // Health check
 app.get('/health', (_req, res) => {

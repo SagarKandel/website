@@ -133,6 +133,12 @@ model BlogPost {
   @@index([slug])
 }
 
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
 model ActiveSession {
   sessionId   String   @id
   page        String
