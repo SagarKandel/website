@@ -2,123 +2,133 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Server, Network, Shield, Cpu, Database, Workflow } from 'lucide-react'
+import { Network, Shield, Server, Database, Cpu, Workflow } from 'lucide-react'
 
-const profile = [
-  { k: 'NAME',        v: 'Sagar Kandel' },
-  { k: 'ROLE',        v: 'Senior Network & Systems Eng.' },
-  { k: 'EMPLOYER',    v: 'Blockhead VFX — Sydney, AU' },
-  { k: 'CLEARANCE',   v: 'Senior Infrastructure' },
-  { k: 'CERTS',       v: 'AWS SAA-C03 · B.IT Victoria Uni' },
-  { k: 'STATUS',      v: '● AVAILABLE FOR HIRE', green: true },
+const specialisms = [
+  {
+    icon: Network,
+    title: 'Enterprise & ISP Networking',
+    desc: 'BGP, OSPF, dark fibre, CWDM/DWDM multiplexing, direct leased lines, cross-connects, and full L2 provider management.',
+  },
+  {
+    icon: Shield,
+    title: 'Security & Firewall Engineering',
+    desc: 'Fortigate HA clusters, deep packet inspection, IPS/IDS, IPsec site-to-site VPN, SSL VPN, and zero-trust network access.',
+  },
+  {
+    icon: Server,
+    title: 'Datacenter & Hypervisor Infrastructure',
+    desc: 'Proxmox VE clustering, Hyper-V, Ceph distributed storage, live migration, and HA at datacenter scale.',
+  },
+  {
+    icon: Database,
+    title: 'Storage & NAS Engineering',
+    desc: 'TrueNAS SCALE, ZFS pool design, RAIDZ2, snapshot replication, iSCSI/NFS/SMB for VFX render pipelines.',
+  },
+  {
+    icon: Cpu,
+    title: 'Containerisation & Self-Hosted AI',
+    desc: 'Docker, Portainer, Ollama and vLLM on bare-metal GPU nodes — AI inference without cloud API dependency.',
+  },
+  {
+    icon: Workflow,
+    title: 'VFX Pipeline & Studio Systems',
+    desc: 'AYON pipeline, NIM Studio Management, RMM tooling, and endpoint management across Windows/Linux/macOS fleets.',
+  },
 ]
 
-const highlights = [
-  { icon: Network,  label: 'Enterprise & ISP-Level Networking',    desc: 'BGP, OSPF, dark fibre, CWDM/DWDM, direct leased lines, cross-connects, full L2 provider management.' },
-  { icon: Shield,   label: 'Security & Firewall Engineering',      desc: 'Fortigate HA clusters, DPI, IPS/IDS, IPsec site-to-site VPN, SSL VPN, and zero-trust network access.' },
-  { icon: Server,   label: 'Datacenter & Hypervisor Infrastructure', desc: 'Proxmox VE clustering, Hyper-V, Ceph storage, live migration, and high-availability at datacenter scale.' },
-  { icon: Database, label: 'Storage & NAS Engineering',             desc: 'TrueNAS SCALE, ZFS pool design, RAIDZ2, snapshot replication, and iSCSI/NFS/SMB for VFX render pipelines.' },
-  { icon: Cpu,      label: 'Containerisation & Self-Hosted AI',    desc: 'Docker, Portainer, Ollama and vLLM on bare-metal GPU nodes — AI inference without external API dependency.' },
-  { icon: Workflow, label: 'VFX Pipeline & Studio Systems',        desc: 'AYON pipeline, NIM Studio Management, RMM tooling, and endpoint management across Windows/Linux/macOS fleets.' },
+const profile = [
+  { label: 'Currently at',  value: 'Blockhead VFX, Sydney' },
+  { label: 'Role',          value: 'Senior Network & Systems Engineer' },
+  { label: 'Education',     value: 'B.IT — Victoria University, Melbourne' },
+  { label: 'Certification', value: 'AWS Solutions Architect Associate' },
+  { label: 'Experience',    value: '5+ years enterprise infrastructure' },
+  { label: 'Timezone',      value: 'AEST — UTC+10/11' },
 ]
 
 export default function AboutSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.08 })
 
   return (
-    <section id="about" className="py-24 bg-surface net-grid">
+    <section id="about" className="py-28 section-alt">
       <div className="section-container" ref={ref}>
+
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-14"
+          className="mb-16"
         >
-          <p className="section-label">$ whoami</p>
-          <h2 className="section-title">Operator Profile</h2>
+          <p className="eyebrow">About</p>
+          <h2 className="h2 mb-4">Engineering infrastructure<br className="hidden sm:block" /> that never sleeps</h2>
+          <p className="text-lg text-text-2 leading-relaxed max-w-2xl">
+            From Nepal to Melbourne to Sydney — 5+ years building the networks and systems
+            that power award-winning VFX production at Blockhead VFX.
+          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
+        <div className="grid lg:grid-cols-5 gap-8 items-start">
 
-          {/* System profile card */}
+          {/* Profile card */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-2"
           >
-            <div className="terminal-chrome">
-              <div className="terminal-chrome-bar">
-                <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                <span className="w-3 h-3 rounded-full bg-amber/70" />
-                <span className="w-3 h-3 rounded-full bg-green/70" />
-                <span className="ml-3 font-mono text-xs text-muted">system-profile.sh</span>
-              </div>
-              <div className="p-6 font-mono text-sm">
-                <div className="text-muted text-xs mb-4">
-                  <span className="text-cyan">➜</span> cat /etc/operator/profile
+            <div className="card-flat rounded-2xl overflow-hidden">
+              {/* Photo area */}
+              <div className="h-48 flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #e8f0fb 0%, #f0eaff 100%)' }}>
+                <div className="w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold text-accent"
+                  style={{ background: 'rgba(255,255,255,0.7)', border: '2px solid rgba(0,102,204,0.15)' }}>
+                  SK
                 </div>
+              </div>
 
-                {/* Profile rows */}
-                <div className="border border-border rounded-lg overflow-hidden">
-                  {profile.map((row, i) => (
-                    <div
-                      key={row.k}
-                      className={`flex items-center gap-4 px-4 py-3 ${
-                        i < profile.length - 1 ? 'border-b border-border' : ''
-                      } ${i % 2 === 0 ? 'bg-surface/50' : 'bg-transparent'}`}
-                    >
-                      <span className="text-muted text-xs tracking-widest w-24 flex-shrink-0">{row.k}</span>
-                      <span className="text-border mx-1">│</span>
-                      <span className={row.green ? 'text-green font-semibold' : 'text-text'}>
-                        {row.v}
-                      </span>
+              {/* Profile facts */}
+              <div className="p-6">
+                <h3 className="font-bold text-text text-lg mb-1">Sagar Kandel</h3>
+                <p className="text-sm text-muted mb-5">Network &amp; Systems Engineer</p>
+
+                <div className="space-y-3">
+                  {profile.map((row) => (
+                    <div key={row.label} className="flex flex-col gap-0.5">
+                      <span className="text-xs font-semibold text-muted uppercase tracking-wide">{row.label}</span>
+                      <span className="text-sm text-text">{row.value}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-5 text-xs text-muted leading-relaxed">
-                  <span className="text-cyan"># </span>
-                  5+ years engineering enterprise-grade infrastructure at the intersection of
-                  high-performance networking and VFX production. 100 Gbps fabrics, dark fibre,
-                  ISP-level BGP, and self-hosted AI — the systems that keep creative studios running
-                  without a frame dropped.
-                </div>
-
-                <div className="link-bar mt-4" />
-
-                <div className="text-xs text-muted mt-3">
-                  <span className="text-cyan">➜</span>
-                  <span className="cursor-blink text-cyan ml-1">█</span>
+                <div className="mt-6 pt-5 border-t border-[rgba(0,0,0,0.07)] flex gap-2">
+                  <a href="#contact" className="btn-primary flex-1 justify-center text-sm py-2.5">Contact me</a>
+                  <a href="/resume.pdf" download className="btn-secondary flex-1 justify-center text-sm py-2.5">Resume</a>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Highlights */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="space-y-3"
-          >
-            {highlights.map((h, i) => (
+          {/* Specialisms grid */}
+          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+            {specialisms.map((s, i) => (
               <motion.div
-                key={h.label}
-                initial={{ opacity: 0, y: 14 }}
+                key={s.title}
+                initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.3 + i * 0.07 }}
-                className="card-dark flex items-start gap-4 group transition-all hover:border-cyan/30"
+                transition={{ duration: 0.5, delay: 0.15 + i * 0.07 }}
+                className="card group"
               >
-                <div className="p-2.5 bg-cyan/10 rounded-xl flex-shrink-0 group-hover:bg-cyan/15 transition-colors">
-                  <h.icon className="w-5 h-5 text-cyan" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: '#e8f0fb' }}>
+                  <s.icon size={20} className="text-accent" />
                 </div>
-                <div>
-                  <h3 className="font-semibold text-text text-sm mb-1">{h.label}</h3>
-                  <p className="text-muted text-xs leading-relaxed">{h.desc}</p>
-                </div>
+                <h3 className="font-semibold text-text text-sm mb-2 leading-snug">{s.title}</h3>
+                <p className="text-xs text-text-2 leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
+
         </div>
       </div>
     </section>

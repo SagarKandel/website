@@ -6,136 +6,107 @@ import { useInView } from 'react-intersection-observer'
 const categories = [
   {
     title: 'Network Engineering',
-    cmd: 'show interfaces status',
-    color: 'text-cyan',
-    borderColor: 'border-cyan/30',
+    color: '#0066cc',
+    bg: '#e8f0fb',
     skills: [
-      { name: '100 GbE Switching & Routing',     level: 95 },
-      { name: 'BGP / OSPF / Advanced Routing',   level: 92 },
-      { name: 'Dark Fibre / CWDM / DWDM',        level: 88 },
-      { name: 'Fortigate Firewall (Design & HA)', level: 90 },
-      { name: 'ISP / Cross-Connect / DCC',        level: 86 },
-      { name: 'L2 Provider & Leased Lines',       level: 87 },
+      { name: '100 GbE Switching & Routing',       level: 95 },
+      { name: 'BGP / OSPF / Advanced Routing',     level: 92 },
+      { name: 'Dark Fibre / CWDM / DWDM',          level: 88 },
+      { name: 'Fortigate Firewall (Design & HA)',   level: 90 },
+      { name: 'ISP / Cross-Connect / DCC',          level: 86 },
+      { name: 'VPN — IPsec / SSL',                 level: 88 },
     ],
   },
   {
     title: 'Systems & Virtualisation',
-    cmd: 'show platform resources',
-    color: 'text-purple',
-    borderColor: 'border-purple/30',
+    color: '#6b21a8',
+    bg: '#f3e8ff',
     skills: [
-      { name: 'Proxmox VE (Clustering & HA)',    level: 90 },
-      { name: 'Linux Administration',             level: 92 },
-      { name: 'TrueNAS / ZFS / OMV',             level: 88 },
-      { name: 'Hyper-V / Windows Server',         level: 82 },
-      { name: 'Docker / Portainer',               level: 90 },
-      { name: 'Windows Storage Spaces',           level: 78 },
+      { name: 'Proxmox VE (Clustering & HA)',  level: 90 },
+      { name: 'Linux Administration',          level: 92 },
+      { name: 'TrueNAS / ZFS / OMV',          level: 88 },
+      { name: 'Hyper-V / Windows Server',      level: 82 },
+      { name: 'Docker / Portainer',            level: 90 },
+      { name: 'Ceph Distributed Storage',      level: 82 },
     ],
   },
   {
     title: 'Cloud, AI & Automation',
-    cmd: 'show cloud-services health',
-    color: 'text-amber',
-    borderColor: 'border-amber/30',
+    color: '#b45309',
+    bg: '#fef3c7',
     skills: [
-      { name: 'AWS (SAA-C03 Certified)',         level: 82 },
-      { name: 'Ollama / vLLM Self-Hosted AI',    level: 85 },
-      { name: 'RMM & Software Deployment',        level: 88 },
-      { name: 'Python / Bash Scripting',          level: 78 },
-      { name: 'AYON / NIM Studio Pipeline',       level: 85 },
-      { name: 'GAM / GYB / Google Workspace',    level: 80 },
+      { name: 'AWS (SAA-C03 Certified)',       level: 82 },
+      { name: 'Ollama / vLLM Self-Hosted AI',  level: 85 },
+      { name: 'RMM & Software Deployment',     level: 88 },
+      { name: 'Python / Bash Scripting',       level: 78 },
+      { name: 'AYON / NIM Pipeline',          level: 85 },
+      { name: 'Google Workspace / GAM',        level: 80 },
     ],
   },
 ]
 
 const toolGroups = [
-  { label: 'Networking',          tools: ['Fortigate','Cisco','Juniper','BGP','OSPF','CWDM','DWDM','Dark Fibre','VLANs','LACP','SFP+','QSFP28','Wireshark','tcpdump'] },
-  { label: 'Virtualisation',      tools: ['Proxmox VE','Hyper-V','VMware ESXi','KVM','LXC','Windows Server 2022','Active Directory','WSUS'] },
-  { label: 'Storage',             tools: ['TrueNAS SCALE','TrueNAS CORE','OpenMediaVault','ZFS','iSCSI','NFS','SMB','Ceph','RAIDZ2','S3'] },
-  { label: 'Containers & DevOps', tools: ['Docker','Portainer','Docker Compose','Nginx','Traefik','Git','GitHub Actions','CI/CD'] },
-  { label: 'AI & Open Source',    tools: ['Ollama','vLLM','LLaMA 3','Mistral','Open WebUI','Stable Diffusion','Netdata','Grafana','InfluxDB'] },
-  { label: 'VFX & Studio',        tools: ['AYON','NIM Studio','RMM','SolarWinds','PRTG','Nagios','Slack','Teams','Google Workspace','GAM','GYB'] },
+  { label: 'Networking',          tools: ['Fortigate', 'Cisco', 'BGP', 'OSPF', 'CWDM', 'DWDM', 'Dark Fibre', 'VLANs', 'LACP', 'Wireshark', 'tcpdump'] },
+  { label: 'Virtualisation',      tools: ['Proxmox VE', 'Hyper-V', 'KVM', 'LXC', 'Windows Server 2022', 'Active Directory', 'WSUS'] },
+  { label: 'Storage',             tools: ['TrueNAS SCALE', 'ZFS', 'iSCSI', 'NFS', 'SMB', 'Ceph', 'RAIDZ2', 'S3'] },
+  { label: 'Containers & DevOps', tools: ['Docker', 'Portainer', 'Docker Compose', 'Nginx', 'Traefik', 'Git', 'GitHub Actions'] },
+  { label: 'AI & Monitoring',     tools: ['Ollama', 'vLLM', 'LLaMA 3', 'Mistral', 'Open WebUI', 'Grafana', 'InfluxDB', 'Netdata'] },
+  { label: 'VFX & Studio',        tools: ['AYON', 'NIM Studio', 'RMM', 'SolarWinds', 'PRTG', 'Google Workspace', 'GAM', 'GYB'] },
 ]
 
 const certs = [
-  { icon: '☁️', name: 'AWS Certified Solutions Architect', level: 'Associate · SAA-C03', issuer: 'Amazon Web Services' },
-  { icon: '🎓', name: 'Bachelor of Information Technology', level: 'Network & System Computing', issuer: 'Victoria University · Melbourne' },
+  { name: 'AWS Certified Solutions Architect', sub: 'Associate · SAA-C03', issuer: 'Amazon Web Services', color: '#ff9900', bg: '#fff3e0' },
+  { name: 'Bachelor of Information Technology', sub: 'Network & System Computing', issuer: 'Victoria University, Melbourne', color: '#0066cc', bg: '#e8f0fb' },
 ]
 
 export default function SkillsSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 })
 
   return (
-    <section id="skills" className="py-24 bg-surface net-grid">
+    <section id="skills" className="py-28 section-alt">
       <div className="section-container" ref={ref}>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-14"
+          className="mb-16"
         >
-          <p className="section-label">$ show tech-stack --all</p>
-          <h2 className="section-title">Technical Stack</h2>
+          <p className="eyebrow">Technical Skills</p>
+          <h2 className="h2">Built across years of<br className="hidden sm:block" /> real infrastructure work</h2>
         </motion.div>
 
-        {/* Certifications */}
-        <div className="grid sm:grid-cols-2 gap-4 mb-12">
-          {certs.map((c, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.1 + i * 0.1 }}
-              className="terminal-chrome flex items-center gap-4 p-5"
-            >
-              <div className="text-4xl">{c.icon}</div>
-              <div>
-                <p className="font-semibold text-text text-sm">{c.name}</p>
-                <p className="text-text-2 text-sm font-mono">{c.level}</p>
-                <p className="text-muted text-xs mt-0.5">{c.issuer}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Skill categories with animated bars */}
-        <div className="grid md:grid-cols-3 gap-5 mb-12">
+        {/* Skill categories */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
           {categories.map((cat, ci) => (
             <motion.div
               key={cat.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + ci * 0.1 }}
-              className={`terminal-chrome border ${cat.borderColor}`}
+              transition={{ duration: 0.6, delay: 0.1 + ci * 0.1 }}
+              className="card-flat rounded-2xl p-6"
             >
-              <div className="terminal-chrome-bar">
-                <span className="font-mono text-xs text-muted">{cat.cmd}</span>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-lg"
+                style={{ background: cat.bg }}>
+                <span style={{ color: cat.color, fontWeight: 700, fontSize: '14px' }}>
+                  {ci === 0 ? '⬡' : ci === 1 ? '⬢' : '☁'}
+                </span>
               </div>
-              <div className="p-5 space-y-4">
-                <h3 className={`font-mono text-xs tracking-widest uppercase mb-4 ${cat.color}`}>
-                  {cat.title}
-                </h3>
-                {cat.skills.map((skill, si) => (
-                  <div key={skill.name}>
+              <h3 className="font-semibold text-text mb-5 text-[15px]">{cat.title}</h3>
+              <div className="space-y-4">
+                {cat.skills.map((sk, i) => (
+                  <div key={sk.name}>
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-xs text-text-2">{skill.name}</span>
-                      <span className={`text-xs font-mono ${cat.color}`}>{skill.level}%</span>
+                      <span className="text-[13px] text-text-2">{sk.name}</span>
+                      <span className="text-[12px] font-semibold" style={{ color: cat.color }}>{sk.level}%</span>
                     </div>
-                    <div className="h-1 bg-border rounded-full overflow-hidden">
+                    <div className="progress-track">
                       <motion.div
+                        className="progress-fill"
+                        style={{ background: `linear-gradient(90deg, ${cat.color}, ${cat.color}cc)` }}
                         initial={{ width: 0 }}
-                        animate={inView ? { width: `${skill.level}%` } : { width: 0 }}
-                        transition={{ duration: 1.1, delay: 0.4 + ci * 0.1 + si * 0.06, ease: 'easeOut' }}
-                        className={`h-full rounded-full ${
-                          cat.color === 'text-cyan' ? 'bg-cyan' :
-                          cat.color === 'text-purple' ? 'bg-purple' : 'bg-amber'
-                        }`}
-                        style={{ boxShadow: cat.color === 'text-cyan'
-                          ? '0 0 8px rgba(0,212,255,0.5)'
-                          : cat.color === 'text-purple'
-                          ? '0 0 8px rgba(139,92,246,0.5)'
-                          : '0 0 8px rgba(245,158,11,0.5)'
-                        }}
+                        animate={inView ? { width: `${sk.level}%` } : { width: 0 }}
+                        transition={{ duration: 1, delay: 0.3 + ci * 0.1 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                       />
                     </div>
                   </div>
@@ -145,34 +116,52 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        {/* Tool groups */}
-        <div className="terminal-chrome">
-          <div className="terminal-chrome-bar">
-            <span className="font-mono text-xs text-muted">show inventory --all-tools</span>
-          </div>
-          <div className="p-5 divide-y divide-border">
-            {toolGroups.map((group, i) => (
-              <motion.div
-                key={group.label}
-                initial={{ opacity: 0, x: -12 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.5 + i * 0.06 }}
-                className="flex flex-wrap items-center gap-2.5 py-3 first:pt-0 last:pb-0"
-              >
-                <span className="text-xs font-mono text-cyan min-w-[140px]">
-                  [{group.label}]
-                </span>
-                {group.tools.map(tool => (
-                  <span key={tool}
-                    className="text-xs font-mono px-2.5 py-1 border border-border text-muted rounded
-                               hover:border-cyan/40 hover:text-cyan transition-all cursor-default">
-                    {tool}
-                  </span>
-                ))}
-              </motion.div>
+        {/* Tools */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="card-flat rounded-2xl p-6 mb-8"
+        >
+          <h3 className="font-semibold text-text mb-6 text-[15px]">Tools &amp; Technologies</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {toolGroups.map((g) => (
+              <div key={g.label}>
+                <p className="text-xs font-semibold text-muted uppercase tracking-widest mb-2.5">{g.label}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {g.tools.map((t) => (
+                    <span key={t} className="tag text-[12px]">{t}</span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
-        </div>
+        </motion.div>
+
+        {/* Certifications */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <p className="text-xs font-semibold text-muted uppercase tracking-widest mb-4">Certifications &amp; Education</p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {certs.map((c) => (
+              <div key={c.name} className="card-flat rounded-2xl p-5 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 text-xl"
+                  style={{ background: c.bg }}>
+                  {c.issuer.includes('Amazon') ? '☁️' : '🎓'}
+                </div>
+                <div>
+                  <p className="font-semibold text-text text-sm leading-snug mb-0.5">{c.name}</p>
+                  <p className="text-xs text-accent font-medium mb-0.5">{c.sub}</p>
+                  <p className="text-xs text-muted">{c.issuer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
     </section>
   )

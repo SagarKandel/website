@@ -1,211 +1,156 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { ExternalLink, Github, Activity } from 'lucide-react'
+import { ExternalLink, Github } from 'lucide-react'
 
-/* Live uptime counter that slowly ticks up */
-function UptimeCounter({ base }: { base: number }) {
-  const [val, setVal] = useState(base)
-  useEffect(() => {
-    const t = setInterval(() => setVal(v => Math.min(100, +(v + 0.001).toFixed(3))), 3000)
-    return () => clearInterval(t)
-  }, [])
-  return <span>{val.toFixed(1)}%</span>
-}
-
-const statusBoard = [
-  { service: '100 Gbps Studio Network Fabric', status: 'OPERATIONAL', statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.9 },
-  { service: 'Dark Fibre WAN (CWDM/DWDM)',      status: 'OPERATIONAL', statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.7 },
-  { service: 'BGP Peering — 3 ISP Peers',        status: 'ESTABLISHED', statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 100  },
-  { service: 'IS-IS Adjacencies',               status: 'ALL UP',      statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.9 },
-  { service: 'Fortigate HA Firewall Cluster',    status: 'PROTECTED',   statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.8 },
-  { service: 'Proxmox VE Cluster',               status: 'HEALTHY',     statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.9 },
-  { service: 'TrueNAS SCALE Storage',            status: 'SYNCED',      statusColor: 'text-green',  dotColor: 'bg-green',  uptime: 99.6 },
-  { service: 'Self-Hosted LLM Inference',        status: 'SERVING',     statusColor: 'text-cyan',   dotColor: 'bg-cyan',   uptime: 98.4 },
-  { service: 'VFX Pipeline (AYON / NIM)',        status: 'RUNNING',     statusColor: 'text-cyan',   dotColor: 'bg-cyan',   uptime: 99.1 },
-]
-
-const featuredProjects = [
+const featured = [
   {
+    category: 'Network Infrastructure',
     title: '100 Gbps VFX Studio Network Fabric',
-    desc: 'Designed and operate a full spine-leaf 100 GbE switching fabric — concurrent render farm traffic, on-set DIT feeds, and inter-facility WAN with LACP bonding, ECMP load balancing, and sub-millisecond failover.',
-    tech: ['100GbE','QSFP28','OSPF','LACP','ECMP','Jumbo Frames'],
-    cat: 'Network Infrastructure', catColor: 'text-cyan bg-cyan/10 border-cyan/20',
+    desc: 'Designed and operate a full spine-leaf 100 GbE switching fabric — concurrent render farm traffic, on-set DIT feeds, and inter-facility WAN with LACP bonding, ECMP load balancing, and sub-millisecond failover. Serves hundreds of artists across multiple concurrent productions.',
+    tech: ['100GbE', 'QSFP28', 'OSPF', 'LACP', 'ECMP', 'Jumbo Frames', 'Spine-Leaf'],
+    accent: '#0066cc',
+    bg: '#e8f0fb',
   },
   {
+    category: 'WAN / Dark Fibre',
     title: 'Dark Fibre WAN with CWDM/DWDM Multiplexing',
-    desc: 'Multi-site dark fibre connectivity using CWDM wavelength multiplexing — dedicated 10G/100G inter-site bandwidth completely off ISP infrastructure, with optical monitoring and wavelength-level fault isolation.',
-    tech: ['Dark Fibre','CWDM','DWDM','SFP+/QSFP','OTDR','Optical Mon.'],
-    cat: 'WAN / Dark Fibre', catColor: 'text-purple bg-purple/10 border-purple/20',
+    desc: 'Multi-site dark fibre connectivity using CWDM wavelength multiplexing — dedicated 10G/100G inter-site bandwidth completely off ISP infrastructure, with optical monitoring and wavelength-level fault isolation. Eliminated all inter-site ISP costs and latency.',
+    tech: ['Dark Fibre', 'CWDM', 'DWDM', 'SFP+', 'QSFP', 'OTDR', 'Optical Monitoring'],
+    accent: '#6b21a8',
+    bg: '#f3e8ff',
   },
   {
+    category: 'ISP Networking',
     title: 'ISP-Level BGP & Leased Line Architecture',
-    desc: 'Full BGP peering at ISP interconnect points — full routing table management, route policy, AS-path manipulation, and community tagging. Cross-connect and direct leased line (DCC) provisioning end-to-end.',
-    tech: ['BGP','OSPF','AS-Path','Route Policy','Cross-Connect','DCC'],
-    cat: 'ISP Networking', catColor: 'text-amber bg-amber/10 border-amber/20',
+    desc: 'Full BGP peering at ISP interconnect points — full routing table management, route policy, AS-path manipulation, and community tagging. Cross-connect and direct leased line (DCC) provisioning end-to-end for studio WAN connectivity.',
+    tech: ['BGP', 'OSPF', 'AS-Path', 'Route Policy', 'Cross-Connect', 'DCC', 'Full Table'],
+    accent: '#b45309',
+    bg: '#fef3c7',
   },
 ]
 
-const otherProjects = [
-  { title: 'Fortigate HA Firewall Estate',       cat: 'Security',        tech: ['Fortigate','HA','IPsec','SSL VPN','DPI'],              github: null, demo: null },
-  { title: 'Proxmox VE Hypervisor Cluster',      cat: 'Virtualisation',  tech: ['Proxmox VE','Ceph','HA','KVM','ZFS'],                  github: null, demo: null },
-  { title: 'TrueNAS SCALE Production Storage',   cat: 'Storage',         tech: ['TrueNAS SCALE','ZFS','RAIDZ2','iSCSI','NFS','SMB'],    github: null, demo: null },
-  { title: 'Self-Hosted LLM Inference Stack',    cat: 'AI / Self-Hosted',tech: ['Ollama','vLLM','LLaMA 3','Open WebUI','Docker'],        github: null, demo: null },
-  { title: 'AYON + NIM VFX Pipeline',            cat: 'VFX Pipeline',    tech: ['AYON','NIM Studio','Python','Docker'],                 github: null, demo: null },
-  { title: 'Portfolio + Analytics Backend',      cat: 'Web Dev',         tech: ['Next.js 14','TypeScript','Express','PostgreSQL'],       github: 'https://github.com/SagarKandel/website', demo: 'https://sagarkandel.com' },
+const other = [
+  { title: 'Fortigate HA Firewall Estate',      category: 'Security',       tech: ['Fortigate', 'HA Clustering', 'IPsec', 'SSL VPN', 'DPI', 'IPS/IDS'],  github: null, demo: null },
+  { title: 'Proxmox VE Hypervisor Cluster',     category: 'Virtualisation', tech: ['Proxmox VE', 'Ceph', 'HA', 'KVM', 'ZFS', 'Live Migration'],           github: null, demo: null },
+  { title: 'TrueNAS SCALE Production Storage',  category: 'Storage',        tech: ['TrueNAS SCALE', 'ZFS', 'RAIDZ2', 'iSCSI', 'NFS', 'SMB'],             github: null, demo: null },
+  { title: 'Self-Hosted LLM Inference Stack',   category: 'AI',             tech: ['Ollama', 'vLLM', 'LLaMA 3', 'Open WebUI', 'Docker', 'GPU Nodes'],     github: null, demo: null },
+  { title: 'AYON + NIM VFX Pipeline',           category: 'VFX Pipeline',   tech: ['AYON', 'NIM Studio', 'Python', 'Docker', 'Pipeline Automation'],      github: null, demo: null },
+  { title: 'Portfolio & Analytics Platform',    category: 'Web Dev',        tech: ['Next.js 14', 'TypeScript', 'Express', 'PostgreSQL', 'Prisma'],         github: 'https://github.com/SagarKandel/website', demo: 'https://sagarkandel.com' },
 ]
 
-const catColors: Record<string,string> = {
-  'Security':        'text-red bg-red/10 border-red/20',
-  'Virtualisation':  'text-amber bg-amber/10 border-amber/20',
-  'Storage':         'text-amber bg-amber/10 border-amber/20',
-  'AI / Self-Hosted':'text-purple bg-purple/10 border-purple/20',
-  'VFX Pipeline':    'text-cyan bg-cyan/10 border-cyan/20',
-  'Web Dev':         'text-green bg-green/10 border-green/20',
+const categoryColors: Record<string, { text: string; bg: string }> = {
+  'Security':       { text: '#dc2626', bg: '#fee2e2' },
+  'Virtualisation': { text: '#b45309', bg: '#fef3c7' },
+  'Storage':        { text: '#b45309', bg: '#fef3c7' },
+  'AI':             { text: '#6b21a8', bg: '#f3e8ff' },
+  'VFX Pipeline':   { text: '#0066cc', bg: '#e8f0fb' },
+  'Web Dev':        { text: '#1a7a4a', bg: '#d1fae5' },
 }
 
 export default function ProjectsSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.04 })
-  const [tick, setTick] = useState(0)
-  useEffect(() => {
-    const t = setInterval(() => setTick(n => n + 1), 2000)
-    return () => clearInterval(t)
-  }, [])
 
   return (
-    <section id="projects" className="py-24 bg-bg">
+    <section id="projects" className="py-28 bg-bg">
       <div className="section-container" ref={ref}>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-14"
+          className="mb-16"
         >
-          <p className="section-label">$ show infrastructure status</p>
-          <h2 className="section-title">Infrastructure & Projects</h2>
+          <p className="eyebrow">Projects & Infrastructure</p>
+          <h2 className="h2">What I've built</h2>
         </motion.div>
 
-        {/* ── Live Status Board ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.15 }}
-          className="terminal-chrome mb-14"
-        >
-          <div className="terminal-chrome-bar">
-            <span className="w-3 h-3 rounded-full bg-red-500/70" />
-            <span className="w-3 h-3 rounded-full bg-amber/70" />
-            <span className="w-3 h-3 rounded-full bg-green/70" />
-            <span className="ml-3 font-mono text-xs text-muted">infrastructure-status-board</span>
-            <span className="ml-auto flex items-center gap-1.5">
-              <Activity size={12} className="text-green animate-pulse" />
-              <span className="text-xs font-mono text-green">LIVE</span>
-            </span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full font-mono text-sm">
-              <thead>
-                <tr className="border-b border-border bg-surface-2/60">
-                  <th className="text-left text-xs text-muted tracking-widest px-5 py-3 font-normal">SERVICE / SYSTEM</th>
-                  <th className="text-left text-xs text-muted tracking-widest px-4 py-3 font-normal">STATUS</th>
-                  <th className="text-right text-xs text-muted tracking-widest px-5 py-3 font-normal">UPTIME</th>
-                </tr>
-              </thead>
-              <tbody>
-                {statusBoard.map((row, i) => (
-                  <motion.tr
-                    key={row.service}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.25 + i * 0.06 }}
-                    className="border-b border-border/50 hover:bg-surface/60 transition-colors"
-                  >
-                    <td className="px-5 py-3 text-text-2 text-xs">{row.service}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${row.statusColor}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${row.dotColor} ${i % 3 === 0 ? 'animate-pulse' : ''}`} />
-                        {row.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-right text-xs text-green font-mono">
-                      <UptimeCounter base={row.uptime} />
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="px-5 py-3 border-t border-border flex items-center justify-between">
-            <span className="text-xs text-muted font-mono">
-              Last sync: <span className="text-cyan">{new Date().toISOString().slice(0,19).replace('T',' ')} UTC</span>
-            </span>
-            <span className="text-xs text-green font-mono">All systems nominal ✓</span>
-          </div>
-        </motion.div>
-
-        {/* ── Featured Projects ── */}
+        {/* Featured */}
         <div className="space-y-5 mb-14">
-          {featuredProjects.map((p, i) => (
+          {featured.map((p, i) => (
             <motion.div
               key={p.title}
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.35 + i * 0.1 }}
-              className="card-dark hover:border-border-bright transition-all"
+              transition={{ duration: 0.6, delay: 0.1 + i * 0.1 }}
+              className="card-flat rounded-2xl overflow-hidden"
             >
-              <div className="mb-3">
-                <span className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-md border ${p.catColor}`}>
-                  {p.cat}
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-text mb-2">{p.title}</h3>
-              <p className="text-text-2 text-sm leading-relaxed mb-4">{p.desc}</p>
-              <div className="link-bar" />
-              <div className="flex flex-wrap gap-2 mt-3">
-                {p.tech.map(t => (
-                  <span key={t} className="text-xs font-mono px-2.5 py-1 border border-border text-muted rounded hover:border-cyan/40 hover:text-cyan transition-all">
-                    {t}
-                  </span>
-                ))}
+              <div className="flex flex-col md:flex-row">
+                {/* Accent sidebar */}
+                <div className="md:w-1.5 h-1.5 md:h-auto rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                  style={{ background: p.accent }} />
+
+                <div className="p-7 flex-1">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-lg"
+                      style={{ color: p.accent, background: p.bg }}>
+                      {p.category}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-text mb-3 leading-snug">{p.title}</h3>
+                  <p className="text-[15px] text-text-2 leading-relaxed mb-5">{p.desc}</p>
+                  <div className="divider mb-4" />
+                  <div className="flex flex-wrap gap-2">
+                    {p.tech.map((t) => <span key={t} className="tag">{t}</span>)}
+                  </div>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* ── Other Projects ── */}
-        <p className="text-xs font-mono text-muted tracking-widest uppercase mb-5">
-          <span className="text-cyan">// </span>other notable work
-        </p>
+        {/* Other projects */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.45 }}
+          className="text-xs font-semibold text-muted uppercase tracking-widest mb-5"
+        >
+          Other notable work
+        </motion.p>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {otherProjects.map((p, i) => (
-            <motion.div
-              key={p.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.55 + i * 0.07 }}
-              className="card-dark flex flex-col hover:border-border-bright transition-all"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className={`text-xs font-mono font-semibold px-2 py-0.5 rounded border ${catColors[p.cat] || 'text-muted bg-surface border-border'}`}>
-                  {p.cat}
-                </span>
-                <div className="flex gap-2">
-                  {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><Github size={14} /></a>}
-                  {p.demo   && <a href={p.demo}   target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><ExternalLink size={14} /></a>}
+          {other.map((p, i) => {
+            const color = categoryColors[p.category] || { text: '#6e6e73', bg: '#f5f5f7' }
+            return (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.5 + i * 0.07 }}
+                className="card flex flex-col p-5"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-lg"
+                    style={{ color: color.text, background: color.bg }}>
+                    {p.category}
+                  </span>
+                  <div className="flex gap-2">
+                    {p.github && (
+                      <a href={p.github} target="_blank" rel="noopener noreferrer"
+                        className="text-muted hover:text-text transition-colors">
+                        <Github size={15} />
+                      </a>
+                    )}
+                    {p.demo && (
+                      <a href={p.demo} target="_blank" rel="noopener noreferrer"
+                        className="text-muted hover:text-text transition-colors">
+                        <ExternalLink size={15} />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <h3 className="font-semibold text-text text-sm mb-2 flex-1 leading-snug">{p.title}</h3>
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {p.tech.slice(0, 4).map(t => <span key={t} className="text-xs font-mono text-muted">{t}</span>)}
-                {p.tech.length > 4 && <span className="text-xs font-mono text-muted">+{p.tech.length - 4}</span>}
-              </div>
-            </motion.div>
-          ))}
+                <h3 className="font-semibold text-text text-sm leading-snug mb-3 flex-1">{p.title}</h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {p.tech.slice(0, 4).map((t) => <span key={t} className="tag text-[11px]">{t}</span>)}
+                  {p.tech.length > 4 && <span className="tag text-[11px]">+{p.tech.length - 4}</span>}
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
+
       </div>
     </section>
   )

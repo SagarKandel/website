@@ -13,99 +13,74 @@ const links = [
 ]
 
 export default function Navbar() {
-  const [scrolled, setScrolled]   = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 30)
-    window.addEventListener('scroll', fn)
+    const fn = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
   return (
     <>
       <motion.nav
-        initial={{ y: -70, opacity: 0 }}
+        initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'bg-bg/90 backdrop-blur-md border-b border-border'
-            : 'bg-transparent'
+          scrolled ? 'glass border-b border-[rgba(0,0,0,0.08)]' : 'bg-transparent'
         }`}
       >
         <div className="section-container">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <a href="#" className="flex items-center gap-2.5 group">
-              <div className="flex items-end gap-0.5">
-                {[0,1,2].map(i => (
-                  <span
-                    key={i}
-                    className="w-0.5 bg-cyan rounded-sm transition-all duration-300 group-hover:bg-cyan"
-                    style={{ height: `${8 + i * 4}px` }}
-                  />
-                ))}
-              </div>
-              <span className="font-mono text-sm text-text font-semibold tracking-wider group-hover:text-cyan transition-colors">
-                SAGAR<span className="text-cyan">.</span>KANDEL
-              </span>
+            <a href="#" className="text-[15px] font-semibold text-text tracking-tight hover:opacity-60 transition-opacity">
+              Sagar Kandel
             </a>
 
-            {/* Desktop */}
             <div className="hidden md:flex items-center gap-0.5">
               {links.map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="px-4 py-2 text-sm text-text-2 hover:text-cyan font-mono tracking-wide transition-colors"
-                >
+                <a key={label} href={href}
+                  className="px-4 py-1.5 text-[14px] text-text-2 hover:text-text rounded-full transition-colors hover:bg-black/[0.04]">
                   {label}
                 </a>
               ))}
-              <a
-                href="/resume.pdf"
-                download
-                onClick={() => fetch(`${process.env.NEXT_PUBLIC_API_URL}/track/resume-download`, { method: 'POST' }).catch(() => {})}
-                className="ml-4 btn-cyan py-2 text-xs tracking-wider"
-              >
-                Resume ↓
-              </a>
             </div>
 
-            <button
-              onClick={() => setMobileOpen(v => !v)}
-              className="md:hidden p-2 text-text-2 hover:text-cyan transition-colors"
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            <div className="hidden md:block">
+              <a href="#contact" className="btn-primary py-2 px-5 text-[13px]">Get in touch</a>
+            </div>
+
+            <button onClick={() => setOpen(!open)}
+              className="md:hidden p-2 rounded-xl hover:bg-black/[0.05] transition-colors text-text">
+              {open ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
       </motion.nav>
 
       <AnimatePresence>
-        {mobileOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-bg net-grid flex flex-col items-center justify-center gap-6"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="fixed top-16 inset-x-0 z-40 glass border-b border-[rgba(0,0,0,0.08)] md:hidden"
           >
-            <button onClick={() => setMobileOpen(false)} className="absolute top-5 right-5 text-text-2 hover:text-cyan">
-              <X size={24} />
-            </button>
-            {links.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className="font-mono text-2xl text-text hover:text-cyan transition-colors tracking-widest"
-              >
-                {label}
-              </a>
-            ))}
-            <a href="/resume.pdf" download className="mt-2 btn-cyan">Resume ↓</a>
+            <div className="section-container py-3 flex flex-col gap-0.5">
+              {links.map(({ label, href }) => (
+                <a key={label} href={href} onClick={() => setOpen(false)}
+                  className="px-4 py-2.5 text-sm text-text-2 hover:text-text rounded-xl hover:bg-black/[0.04] transition-colors">
+                  {label}
+                </a>
+              ))}
+              <div className="pt-3 pb-1">
+                <a href="#contact" onClick={() => setOpen(false)} className="btn-primary w-full justify-center text-sm">
+                  Get in touch
+                </a>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

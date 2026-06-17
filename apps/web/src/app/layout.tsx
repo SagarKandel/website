@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
-const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', weight: ['400','500','600','700','800'] })
 
 export const metadata: Metadata = {
   title: 'Sagar Kandel — Network & Systems Engineer',
@@ -31,12 +30,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${jetbrains.variable} font-sans antialiased bg-bg text-text`}>
+      <body className={`${inter.variable} font-sans antialiased bg-bg text-text`}>
         {children}
         <Toaster
-          theme="dark"
           toastOptions={{
-            style: { background: '#0a1628', border: '1px solid #1a2d4f', color: '#e2e8f0', fontFamily: 'var(--font-inter)' },
+            style: { background: '#fff', border: '1px solid rgba(0,0,0,0.1)', color: '#1d1d1f', fontFamily: 'var(--font-inter)', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' },
           }}
         />
       </body>
