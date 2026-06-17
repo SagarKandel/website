@@ -9,6 +9,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
     ],
   },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://api-production-ead1.up.railway.app',
+  },
 }
 
 module.exports = nextConfig
