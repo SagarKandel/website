@@ -28,7 +28,7 @@ router.get('/projects', async (_req: Request, res: Response) => {
 router.post('/projects', async (req: Request, res: Response) => {
   const parsed = projectSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
-  const project = await prisma.project.create({ data: parsed.data })
+  const project = await prisma.project.create({ data: parsed.data as any })
   res.status(201).json(project)
 })
 
@@ -72,7 +72,7 @@ router.get('/experience', async (_req: Request, res: Response) => {
 router.post('/experience', async (req: Request, res: Response) => {
   const parsed = expSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
-  const item = await prisma.experience.create({ data: parsed.data })
+  const item = await prisma.experience.create({ data: parsed.data as any })
   res.status(201).json(item)
 })
 
@@ -113,7 +113,7 @@ router.get('/skills', async (_req: Request, res: Response) => {
 router.post('/skills', async (req: Request, res: Response) => {
   const parsed = skillSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
-  const skill = await prisma.skill.create({ data: parsed.data })
+  const skill = await prisma.skill.create({ data: parsed.data as any })
   res.status(201).json(skill)
 })
 
@@ -171,7 +171,7 @@ router.post('/posts', async (req: Request, res: Response) => {
       data: {
         ...parsed.data,
         publishedAt: parsed.data.published ? new Date() : null,
-      },
+      } as any,
     })
     res.status(201).json(post)
   } catch {
